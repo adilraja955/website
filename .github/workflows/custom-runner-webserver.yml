@@ -1,0 +1,26 @@
+name: Run Webserver on Custom Runner blackEye
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-webserver:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run Nginx container
+      run: |
+        docker pull nginx:latest
+        docker run -d -p 8080:80 --name my-nginx nginx:latest
+        docker ps -a
+
+    - name: Test Nginx server
+      run: curl -I http://localhost:8080
